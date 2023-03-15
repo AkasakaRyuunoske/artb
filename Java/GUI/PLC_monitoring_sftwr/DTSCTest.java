@@ -27,7 +27,7 @@ public class DTSCTest extends JFrame {
     final int SLOW = FAST * 5;
     Random random = new Random();
     Timer timer;
-    final ImageIcon imageIcon = new ImageIcon("C:\\robochiy stol\\Logo-ETM2.jpg");
+    final ImageIcon imageIcon = new ImageIcon("C:\\robochiy stol\\Logo-.jpg");
 
     public DTSCTest(String title) {
         super(title);
