@@ -1,13 +1,3 @@
-# Rogue-ncurses
-Custom version of well known game "Rogue" maintaining the same style but with slight difference.
+Just collection of random code, that initially was supposed to be a game.
 
-
-The project will be developed using C language only
-
-
-# Core fetures:
- 1. Colors
- 2. better menu
- 3. Better generation
- 4. Bigger rooms
- 5. More user friendly UI
+The code here is just samples, exercises or just small programs with no purpose.
