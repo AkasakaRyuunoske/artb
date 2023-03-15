@@ -16,7 +16,7 @@ import java.sql.*;
 
 public class DrawLine extends JPanel {
     JFrame drawLineFrame;
-    final ImageIcon imageIcon = new ImageIcon("C:\\robochiy stol\\Logo-ETM2.jpg");
+    final ImageIcon imageIcon = new ImageIcon("C:\\robochiy stol\\Logo-.jpg");
     boolean CHART_IS_VISIBLE = false;
     public XYDataset createDataset(String sql, String value1,String value2,String value3,String value4, String value5,String value6,String value7,String value8,String value9,String value10,String value11,String value12,String value13,String value14, String time_1, String time_2){
         MainFrame mainFrame = new MainFrame();
@@ -260,11 +260,11 @@ public class DrawLine extends JPanel {
         ChartPanel chartPanel = new ChartPanel(chart);
         JLabel label = new JLabel();
         JLabel label_2 = new JLabel();
-        label.setText("ETM.srl");
+        label.setText("");
         label.setSize(300,80);
         label.setFont(new Font("MV Bolly", Font.ITALIC, 30));
         label_2.setSize(200,80);
-        label_2.setText("ETM s.r.l - 177013(CE)");
+        label_2.setText(" - 177013(CE)");
         label_2.setFont(new Font("MV Bolly", Font.BOLD, 25));
         chartPanel.setPreferredSize(new Dimension(1070,580));
 
@@ -346,11 +346,11 @@ public class DrawLine extends JPanel {
         domain.setAutoRange(true);
         JLabel label = new JLabel();
         JLabel label_2 = new JLabel();
-        label.setText("ETM.srl");
+        label.setText("");
         label.setBounds(10,0,300,80);
         label.setFont(new Font("MV Bolly", Font.ITALIC, 30));
         label_2.setBounds(970,0,200,80);
-        label_2.setText("ETM s.r.l - 177013(CE)");
+        label_2.setText(" - 177013(CE)");
         label_2.setFont(new Font("MV Bolly", Font.BOLD, 25));
         chartPanel.setBounds(0,100,1270,580);
 
@@ -419,11 +419,11 @@ public class DrawLine extends JPanel {
         ChartPanel chartPanel = new ChartPanel(chart);
         JLabel label = new JLabel();
         JLabel label_2 = new JLabel();
-        label.setText("ETM.srl");
+        label.setText("");
         label.setBounds(10,0,300,80);
         label.setFont(new Font("MV Bolly", Font.ITALIC, 30));
         label_2.setBounds(970,0,200,80);
-        label_2.setText("ETM s.r.l - 177013(CE)");
+        label_2.setText(" - 177013(CE)");
         label_2.setFont(new Font("MV Bolly", Font.BOLD, 25));
         chartPanel.setBounds(0,100,1270,580);
 
