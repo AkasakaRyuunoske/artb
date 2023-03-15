@@ -179,7 +179,7 @@ public class MainFrame implements ActionListener, PropertyChangeListener, TimeCh
 
     ArrayList<String> values = new ArrayList<>();
     String newName;
-    ImageIcon imageIcon_1 = new ImageIcon("C:\\robochiy stol\\Logo-ETM.jpg");
+    ImageIcon imageIcon_1 = new ImageIcon("C:\\robochiy stol\\Logo-.jpg");
     int i = 0;
     JTextField textField;
 
@@ -232,7 +232,7 @@ public class MainFrame implements ActionListener, PropertyChangeListener, TimeCh
         user = logginFrame.user;
         password = logginFrame.password;
 
-        ImageIcon imageIcon = new ImageIcon("C:\\robochiy stol\\Logo-ETM2.jpg");
+        ImageIcon imageIcon = new ImageIcon("C:\\robochiy stol\\Logo-.jpg");
 
         ///////////////////////-----|   Machinery Part  |-----///////////////////////
 
@@ -520,15 +520,15 @@ public class MainFrame implements ActionListener, PropertyChangeListener, TimeCh
             ps3ComboBox.setVisible(true);
             ps4ComboBox.setVisible(true);
 
-            sqlPs1Ver2 = " FROM [Cosma].[dbo].[Linea1] ";
-            sqlPs1 = " FROM [Cosma].[dbo].[Linea1] ";
+            sqlPs1Ver2 = " FROM [].[dbo].[Linea1] ";
+            sqlPs1 = " FROM [].[dbo].[Linea1] ";
 
             sql_1 = " [Cosma].[dbo].[Linea1] ";
             System.out.println(sql_1);
 
             sql_1_time = "Linea1";
 
-            sqlPs1Ver3 = "FROM [Cosma].[dbo].[Linea1]";
+            sqlPs1Ver3 = "FROM [].[dbo].[Linea1]";
 //            value14 = "Tempo PS1";
             newName = "Risultato di PS1";
 
@@ -546,16 +546,16 @@ public class MainFrame implements ActionListener, PropertyChangeListener, TimeCh
             ps3ComboBox.setVisible(true);
             ps4ComboBox.setVisible(true);
 
-            sqlPs1Ver2 = "FROM [Cosma].[dbo].[Linea2]";
+            sqlPs1Ver2 = "FROM [].[dbo].[Linea2]";
 
-            sqlPs1 = "FROM [Cosma].[dbo].[Linea2]";
+            sqlPs1 = "FROM [].[dbo].[Linea2]";
 
-            sql_2 = " [Cosma].[dbo].[Linea2]";
+            sql_2 = " [].[dbo].[Linea2]";
             sql_2_time = "Linea2";
             System.out.println(sql_2);
 //            value14 = "Tempo PS2";
 
-            sqlPs1Ver3 = "FROM [Cosma].[dbo].[Linea2]";
+            sqlPs1Ver3 = "FROM [].[dbo].[Linea2]";
             newName = "Risultato di PS2";
 
 //            dateFromChooser.setBounds(700, 130, 150, 50);
@@ -571,16 +571,16 @@ public class MainFrame implements ActionListener, PropertyChangeListener, TimeCh
             ps3ComboBox.setVisible(true);
             ps4ComboBox.setVisible(true);
 
-            sqlPs1Ver2 = "FROM [Cosma].[dbo].[PS3]";
+            sqlPs1Ver2 = "FROM [].[dbo].[PS3]";
 
-            sqlPs1 = "FROM [Cosma].[dbo].[PS3]";
+            sqlPs1 = "FROM [].[dbo].[PS3]";
             sql_3_time = "PS3";
 
-            sql_3 = " [Cosma].[dbo].[PS3]";
+            sql_3 = " [].[dbo].[PS3]";
 //            value14 = "Tempo PS3";
             System.out.println(sql_3);
 
-            sqlPs1Ver3 = "FROM [Cosma].[dbo].[PS3]";
+            sqlPs1Ver3 = "FROM [].[dbo].[PS3]";
             newName = "Risultato di PS3";
 
 //            dateFromChooser.setBounds(700, 200, 150, 50);
@@ -596,17 +596,17 @@ public class MainFrame implements ActionListener, PropertyChangeListener, TimeCh
             ps3ComboBox.setVisible(true);
             ps4ComboBox.setVisible(true);
 
-            sqlPs1Ver2 = "FROM [Cosma].[dbo].[PS4]";
+            sqlPs1Ver2 = "FROM [].[dbo].[PS4]";
 
-            sqlPs1 = "FROM [Cosma].[dbo].[PS4]";
+            sqlPs1 = "FROM [].[dbo].[PS4]";
             sql_4_time = "PS4";
 
 
-            sql_4 = " [Cosma].[dbo].[PS4]";
+            sql_4 = " [].[dbo].[PS4]";
 //            value14 = "Tempo PS4";
             System.out.println(sql_4);
 
-            sqlPs1Ver3 = "FROM [Cosma].[dbo].[PS4]";
+            sqlPs1Ver3 = "FROM [].[dbo].[PS4]";
             newName = "Risultato di PS4";
 
 
