@@ -16,7 +16,7 @@ public class LogginFrame extends JFrame implements ActionListener {
     JTextField        userField;
     JTextField        passwordField;
 
-    ImageIcon imageIcon = new ImageIcon("C:\\robochiy stol\\Logo-ETM1.jpg");
+    ImageIcon imageIcon = new ImageIcon("C:\\robochiy stol\\Logo-.jpg");
 
     public LogginFrame() {
         //Create Table Button settings.
@@ -48,7 +48,7 @@ public class LogginFrame extends JFrame implements ActionListener {
 
         //Main window configuration.
         logginFrame = new JFrame();                                           //Creating the frame object.
-        logginFrame.setTitle("ETM Data Base Connector");                      //Setting title.
+        logginFrame.setTitle(" Data Base Connector");                      //Setting title.
         logginFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);  //Setting what to do when the X is pressed. Is set to close everything that belongs to this frame.
         logginFrame.setSize(620,700);                             //Setting size of main window.
         logginFrame.setResizable(true);                                       //Leaving the opportunity to window to be resizable.
@@ -81,7 +81,7 @@ public class LogginFrame extends JFrame implements ActionListener {
             try (Connection connection = DriverManager.getConnection(url, user, password)) {                             //DriverManager tries to connect to Data Base using data inputted by user.
                 System.out.println("Connected successfully");                                                            //If is connected prints this to console.
                 try (Statement statement = connection.createStatement()) {                                              //When connected creates SQL request.
-                    String sql = "Use Cosma " + "select TOP 1 * from PS4 ";                                                              //SQL request that will be used.
+                    String sql = "Use " + "select TOP 1 * from PS4 ";                                                              //SQL request that will be used.
                     try (ResultSet ignored = statement.executeQuery(sql)) {                                              //Tries to execute created before sql request.
                         new MainFrame();
                         connection.close();
