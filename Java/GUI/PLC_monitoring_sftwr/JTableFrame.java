@@ -8,7 +8,7 @@ public class JTableFrame {
     JFrame tableFrame;                                                 //Frame object.
     JTable table;                                                      //Table Object.
     DefaultTableModel model;                                      //Model that will be used after to add new rows to the table.
-    ImageIcon imageIcon = new ImageIcon("C:\\robochiy stol\\Logo-ETM2.jpg");
+    ImageIcon imageIcon = new ImageIcon("C:\\robochiy stol\\Logo.jpg");
     JTableFrame(String resultName, ArrayList<String> Names) {
 
         table = new JTable();
