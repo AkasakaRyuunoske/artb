@@ -163,7 +163,7 @@ int mul_all_elements(int length, int array[]){
 }
 
 int * sum_two_arrays(int length, int array_a[], int array_b[]){
-	int result[length];
+	int *result = calloc(length, sizeof(int));
 	int i;
 
 	for(i = 0; i < length; i++){

@@ -29,13 +29,11 @@ int main(int argc, char * argv []){
 
 	print_array(length, array_a);
 
-	int result[length] = sum_two_arrays(length, array_a, array_b);
+	int *result = sum_two_arrays(length, array_a, array_b);
 
-	for(int i = 0; i < length; i++){
-		printf("result at[%d]: %d", i, result[i]);
-	}
+	print_array(length, result);
 
 
-
+	free(result);
 	return 0;
 }
