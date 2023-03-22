@@ -12,6 +12,7 @@
 
 /* I/O Arrays */
 int * input_int_array_dyn (int length);
+int * input_int_array_from_file(char * fileName, int length);
 
 void print_array          (int length, int array[]);
 void print_array_less_info(int length, int array[]);
@@ -57,3 +58,6 @@ void quick_sort_recursive(int array[], int low, int high);
 void merge_sorted_arrays (int array[], int left, int middle, int right);
 void merge_sort_recursive(int array[], int left, int right);
 void merge_sort          (int array[], int length);
+
+/* Compare Arrays */
+int compare_int_arrays(int array_a[], int array_b[], int length);

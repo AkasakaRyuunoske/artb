@@ -11,9 +11,8 @@
  * */
 
 //TODO Search + Binary Search
-//TODO input arrays from file
+//TODO input arrays from file (Done for INTs)
 //TODO testing with files, oracles n voidrays
-//TODO compare arrays
 //TODO add/sub/mul/div two arrays
 
 int * input_int_array_dyn(int length){
@@ -422,5 +421,37 @@ void merge_sort_recursive(int array[], int left, int right){
 // Wrapper function
 void merge_sort(int array[], int length){
 	merge_sort_recursive(array, 0, length - 1);
+}
+
+
+/**
+ * Compares 2 int arrays. 
+ * Return 0 if arrays are equal
+ * Return 1 if arrays are different
+ * 
+ * */ 
+int compare_int_arrays(int array_a[], int array_b[], int length){
+	int i;
+
+	for(i = 0; i < length; i++){
+		if (array_a[i] != array_b[i]) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+int * input_int_array_from_file(char * fileName, int length){
+	int  * numberArray = calloc(length, sizeof(int));
+    FILE * myFile      = fopen (fileName, "r");
+
+    int i;
+
+    for (i = 0; i < length; i++) {
+        fscanf(myFile, "%1d", &numberArray[i]);
+    }
+
+    return numberArray;
 }
 
