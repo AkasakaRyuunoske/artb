@@ -24,14 +24,19 @@ int main(int argc, char * argv []){
 
 	// print_array(length, array);
  
-	merge_sort(array_a, length);
-    printf("Sorted: ");
+	quick_sort(array_a, length);
+	// merge_sort(array_a, length);
+	// buble_sort(array_a, length);
+	// selection_sort(array_a, length);
+	// insertion_sort(array_a, length);
 
-	print_array(length, array_a);
+	print_array_less_info(length, array_a);
+	print_array_less_info(length, array_b);
 
 	int *result = sum_two_arrays(length, array_a, array_b);
 
-	print_array(length, result);
+	print_array_less_info(length, result);
+
 
 
 	free(result);

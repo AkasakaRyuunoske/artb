@@ -1,4 +1,4 @@
-#include <stdlib.h> // calloc/malloc/realloc/free/NULL
+#include <stdlib.h> // calloc/malloc/realloc/free
 #include <stdio.h>  // Printf/Scanf
 
 #include "utils.h"  // Swap
@@ -37,6 +37,16 @@ void print_array(int length, int array[]){
 	for(i = 0; i < length; i++){
 		printf("array[%d] = %d\n", i, array[i]);
 	}
+}
+
+void print_array_less_info(int length, int array[]){
+	int i;
+
+	for(i = 0; i < length; i++){
+		printf("%d ", array[i]);
+	}
+
+	printf("\n");
 }
 
 // Add / Delete / Update By element
@@ -173,13 +183,27 @@ int * sum_two_arrays(int length, int array_a[], int array_b[]){
 	return result;
 }
 
-// int sub_two_arrays(int length, int array_a[], int array_b[]){
+int * sub_two_arrays(int length, int array_a[], int array_b[]){
+	int *result = calloc(length, sizeof(int));
+	int i;
 
-// }
+	for(i = 0; i < length; i++){
+		result[i] = array_a[i] - array_b[i];
+	}
 
-// int mul_two_arrays(int length, int array_a[], int array_b[]){
+	return result;
+}
 
-// }
+int * mul_two_arrays(int length, int array_a[], int array_b[]){
+	int *result = calloc(length, sizeof(int));
+	int i;
+
+	for(i = 0; i < length; i++){
+		result[i] = array_a[i] * array_b[i];
+	}
+
+	return result;
+}
 
 // SORTING 
 
