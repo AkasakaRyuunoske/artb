@@ -13,8 +13,15 @@ int main(int argc, char * argv []){
 	int array_b[] = {5, 2, 1, 4, 5, 10, 7, 8, 11, 1, 12, 32, 2, 4, 5, 6, 1, 3, 7, 6, 72, 23, 21, 17, 19, 8, 8, 42, 29, 1};
 	int length = 30;
 
-	int * array = input_int_array_from_file(argv[1], length);
+	printf("Wellcome to %s!\n", argv [0]); // argv [0] --> name of .exe
+
+	int * array   = input_int_array_from_file(argv[1], length);
+	int * array_1 = input_int_array_from_file(argv[2], length);
+	
     print_array_less_info(length, array);
+    print_array_less_info(length, array_1);
+
+	printf("Result of compare arrays: %d\n", compare_int_arrays(array, array_1, length));
 
 	// printf("Min : %d\n", min(length, array));
 	// printf("max : %d\n", max(length, array));
@@ -43,6 +50,7 @@ int main(int argc, char * argv []){
 	// print_array_less_info(length, result);
 
 	free(array);
+	free(array_1);
 	//free(result);
 	return 0;
 }

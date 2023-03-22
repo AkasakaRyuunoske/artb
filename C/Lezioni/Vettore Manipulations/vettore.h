@@ -8,7 +8,6 @@
 //TODO Search + Binary Search
 //TODO input arrays from file
 //TODO testing with files, oracles n voidrays
-//TODO compare arrays
 
 /* I/O Arrays */
 int * input_int_array_dyn (int length);

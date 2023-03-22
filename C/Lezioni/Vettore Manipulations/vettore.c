@@ -21,6 +21,21 @@ int * input_int_array_dyn(int length){
 	return array;
 }
 
+
+int * input_int_array_from_file(char * fileName, int length){
+	int  * numberArray = calloc(length, sizeof(int));
+    FILE * myFile      = fopen (fileName, "r");
+
+    int i;
+
+    for (i = 0; i < length; i++) {
+        fscanf(myFile, "%1d", &numberArray[i]);
+    }
+
+    return numberArray;
+}
+
+
 void input_int_elements(int length, int * array){
 	int i;
 	for(i = 0; i < length; i++){
@@ -441,17 +456,3 @@ int compare_int_arrays(int array_a[], int array_b[], int length){
 
 	return 0;
 }
-
-int * input_int_array_from_file(char * fileName, int length){
-	int  * numberArray = calloc(length, sizeof(int));
-    FILE * myFile      = fopen (fileName, "r");
-
-    int i;
-
-    for (i = 0; i < length; i++) {
-        fscanf(myFile, "%1d", &numberArray[i]);
-    }
-
-    return numberArray;
-}
-
