@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 
 #include "punto.h"
@@ -8,7 +9,7 @@ struct Punto{
     double y;
 };
 
-Punto newPunto(double x, double y){
+Punto creaPunto(double x, double y){
     
     Punto punto;
 
@@ -20,68 +21,61 @@ Punto newPunto(double x, double y){
     return punto;
 }
 
-
-// Getters
-double getX(Punto punto){
+double ascissa(Punto punto){
     return punto->x;
 }
 
-double getY(Punto punto){
+double ordinata(Punto punto){
     return punto->y;
 }
 
-// Setters
-void setX(Punto punto, double newX){
-    punto->x = newX;
-}
-
-void setY(Punto punto, double newY){
-    punto->y = newY;
-}
-
-// Cringers
-double distance(Punto punto_1, Punto punto_2) {   
+double distanza(Punto punto_1, Punto punto_2) {   
     double distance_x = (punto_1->x - punto_2->x) * (punto_1->x - punto_2->x);
     double distance_y = (punto_1->y - punto_2->y) * (punto_1->y - punto_2->y);
 
     return sqrt(distance_x + distance_y);
 }
 
-Punto add(Punto punto_a, Punto punto_b){
-    Punto result_punto = newPunto(getX(punto_a) + getX(punto_b), getY(punto_a) + getY(punto_b));
+int coppieDistMinD(Punto point_array[], int length, double distanza_input){
+    int i, j, count = 0;
 
-    return result_punto;
-}
+    double distanza_result;
 
-int compare_punto(Punto punto_a, Punto punto_b){
-
-    if ((getX(punto_a) == getX(punto_b)) &&
-        (getY(punto_a) == getY(punto_b))) {
-        return 0;
+    for(i = 0; i < length; i++){
+        for(j = i + 1; j < length; j++){
+            distanza_result = distanza(point_array[i], point_array[j]);
+            if (distanza_result <= distanza_input) {
+                count++;
+            }
+        }
     }
- 
-    return 1;
+
+    return count;
 }
 
-void inputPunto(Punto punto){
-    double x, y;
+double maxDistanza(Punto * array_punti, int length){
+    int i, j;
+    double max_distanza = 0;
+    double distanza_result;
 
-    scanf("%f", &x);
-    scanf("%f", &y);
+    for( i = 0; i < length; i++){
+        for( j = i + 1; j < length; j++){
+            distanza_result = distanza(array_punti[i], array_punti[j]);
 
-    setX(punto, x);
-    setY(punto, y);
-}   
+            if (distanza_result >= max_distanza){
+                max_distanza = distanza_result;
+            }
 
-void outputPunto(Punto punto){
-    printf("%f %f", getX(punto), getY(punto));
+        }
+    }
+
+    return max_distanza;
 }
 
-Punto movePunto(Punto punto, double deltaX, double deltaY){
+void spostaPunto(Punto punto, double deltaX, double deltaY){
     punto->x += deltaX;
     punto->y += deltaY;
 
-    return punto;
 }
 
 Punto centroide(Punto *punti, int length){
@@ -93,9 +87,23 @@ Punto centroide(Punto *punti, int length){
         sumY += punti[i]->y;
     }
     
-    Punto center = newPunto(sumX / length, sumY / length);
+    Punto center = creaPunto(sumX / length, sumY / length);
     
     return center;
+}
+
+void riempiSequenza(Punto * array_punti, int length){
+    double x;
+    double y;
+
+    int i;
+
+    for(i = 0; i < length; i++){
+        printf("Inserire x e y\n");
+        scanf("%f %f", &x, &y);
+
+        array_punti[i] = creaPunto(x,y);
+    }
 }
 
 
