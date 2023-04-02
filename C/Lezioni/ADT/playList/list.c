@@ -1,6 +1,7 @@
-#include"list.h"
+#include "list.h"
 #include "item.h"
-#include<stdlib.h>
+
+#include <stdlib.h>
 
 struct list{
     int size;

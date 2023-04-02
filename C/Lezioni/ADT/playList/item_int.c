@@ -19,5 +19,4 @@ int cmpItem(Item a, Item b){
 	int *p2=b;
 
 	return (*p1-*p2);
-	
 }
