@@ -55,4 +55,13 @@ public class UserRestImpl implements UserRest {
         } //Todo return something meaningful
         return new ResponseEntity<List<UserWrapper>>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @Override
+    public ResponseEntity<String> update(Map<String, String> requestMap) {
+        try{
+            return userService.update(requestMap);
+        } catch (Exception exception){
+            return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // Todo this one too must be changed later
+        }
+    }
 }
