@@ -3,10 +3,12 @@ package com.maid.cafe.c.maidcafec.ServiceImplementation;
 import com.maid.cafe.c.maidcafec.Constants.CafeConstant;
 import com.maid.cafe.c.maidcafec.DAO.UserDAO;
 import com.maid.cafe.c.maidcafec.JWT.CustomUserDetailsService;
+import com.maid.cafe.c.maidcafec.JWT.JWTFilter;
 import com.maid.cafe.c.maidcafec.JWT.JWTUtils;
 import com.maid.cafe.c.maidcafec.POJO.User;
 import com.maid.cafe.c.maidcafec.Service.UserService;
 import com.maid.cafe.c.maidcafec.Utils.CafeUtils;
+import com.maid.cafe.c.maidcafec.Wrapper.UserWrapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -33,6 +37,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     JWTUtils jwtUtils;
+
+    @Autowired
+    JWTFilter jwtFilter;
 
     @Override
     public ResponseEntity<String> signUp(Map<String, String> requestMap) {
@@ -86,7 +93,7 @@ public class UserServiceImpl implements UserService {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestMap.get("email"), requestMap.get("password")));
             if (authentication.isAuthenticated()) {
                 if (customUserDetailsService.getUserDetails().getStatus().equalsIgnoreCase("true")){
-                    return new ResponseEntity<String>("{\"token\":\"" + jwtUtils.generateToken(customUserDetailsService.getUserDetails().getEmail(), customUserDetailsService.getUserDetails().getRole() + "\"}"), HttpStatus.OK);
+                    return new ResponseEntity<String>("{\"token\":\"" + jwtUtils.generateToken(customUserDetailsService.getUserDetails().getEmail(), customUserDetailsService.getUserDetails().getRole()), HttpStatus.OK);
                 }
                 return new ResponseEntity<String>("{\"message\":\"" + "wait for Admin approval." + "\"}", HttpStatus.BAD_REQUEST);
             }
@@ -95,5 +102,20 @@ public class UserServiceImpl implements UserService {
         }
 
         return new ResponseEntity<String>("{\"message\":\"" + "Bad credentials." + "\"}", HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<List<UserWrapper>> getAllUser() {
+        try{
+            if (jwtFilter.isAdmin()){
+                return new ResponseEntity<>(userDAO.getAllUser(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception exception){
+            exception.printStackTrace();
+        }
+        // Todo same here
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
