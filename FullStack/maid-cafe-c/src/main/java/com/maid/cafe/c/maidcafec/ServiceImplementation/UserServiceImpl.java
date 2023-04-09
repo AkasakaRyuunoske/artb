@@ -18,10 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Log4j2
 @Service
@@ -117,5 +114,25 @@ public class UserServiceImpl implements UserService {
         }
         // Todo same here
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> update(Map<String, String> requestMap) {
+        try{
+            if (jwtFilter.isAdmin()){
+                Optional<User> optional = userDAO.findById(Integer.parseInt(requestMap.get("id")));
+                if (optional.isPresent()){
+                    userDAO.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
+                    return CafeUtils.getResponseEntity(CafeConstant.INVALID_DATA, HttpStatus.OK); // Todo yeh yeh this one too must be changed
+                } else {
+                    CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.NOT_FOUND); // Todo change
+                }
+            } else {
+                return CafeUtils.getResponseEntity(CafeConstant.FUSAGA_RE_TA_MICCHI_WO_HIRAKU_MONO_NI_NARU, HttpStatus.UNAUTHORIZED); // todo change this one
+            }
+        } catch (Exception exception){
+            exception.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // todo change this one too
     }
 }
