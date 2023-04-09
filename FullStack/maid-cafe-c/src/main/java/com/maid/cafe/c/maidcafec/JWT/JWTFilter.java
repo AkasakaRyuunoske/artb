@@ -41,8 +41,14 @@ public class JWTFilter extends OncePerRequestFilter {
 
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
                 token = authorizationHeader.substring(7);
+
+                log.info("Token in filter is: " + token);
+
                 userName = jwtUtils.extractUserName(token);
                 claims = jwtUtils.exctractAllClaims(token);
+
+                log.info("Username : " + userName);
+
             }
 
             if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null){
