@@ -3,6 +3,7 @@ package com.maid.cafe.c.maidcafec.JWT;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@Log4j2
 public class JWTUtils {
     private final String secret = "dsadsasdasda";
 
@@ -23,12 +25,17 @@ public class JWTUtils {
     }
 
     private String createToken(Map<String, Object> claims, String subject){
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
-                .signWith(SignatureAlgorithm.HS512, secret.getBytes()).compact();
+                .signWith(SignatureAlgorithm.HS512, secret).compact();
+        log.info("generated token is: " + token);
+        log.info("subject of token is: " + subject);
+        log.info("role is: " + claims.get("role"));
+
+        return token;
     }
 
     // Extraction Methods
@@ -57,6 +64,7 @@ public class JWTUtils {
 
     public Boolean isTokenValid(String token, UserDetails userDetails){
         final String username = extractUserName(token);
+        log.info("Token : " + token);
 
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
