@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 @Service
 public class JWTUtils {
-    private String secret = "NEE20ANATA20WA20ITSUMO20YUME20WO20MITE20MASU20KA?";
+    private final String secret = "dsadsasdasda";
 
     public String generateToken(String username, String role){
         Map<String, Object> claims = new HashMap<>();
@@ -27,8 +27,8 @@ public class JWTUtils {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) //10 hours
-                .signWith(SignatureAlgorithm.HS256, secret).compact();
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
+                .signWith(SignatureAlgorithm.HS512, secret.getBytes()).compact();
     }
 
     // Extraction Methods

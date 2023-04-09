@@ -30,4 +30,16 @@ public class UserRestImpl implements UserRest {
         // Todo return something meaningful
         return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @Override
+    public ResponseEntity<String> login(Map<String, String> requestMap) {
+        try{
+            return userService.login(requestMap);
+        } catch (Exception exception){
+            exception.printStackTrace();
+        }
+
+        // Todo return something meaningful
+        return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

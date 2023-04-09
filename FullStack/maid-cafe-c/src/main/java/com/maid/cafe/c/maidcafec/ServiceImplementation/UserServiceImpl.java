@@ -2,6 +2,8 @@ package com.maid.cafe.c.maidcafec.ServiceImplementation;
 
 import com.maid.cafe.c.maidcafec.Constants.CafeConstant;
 import com.maid.cafe.c.maidcafec.DAO.UserDAO;
+import com.maid.cafe.c.maidcafec.JWT.CustomUserDetailsService;
+import com.maid.cafe.c.maidcafec.JWT.JWTUtils;
 import com.maid.cafe.c.maidcafec.POJO.User;
 import com.maid.cafe.c.maidcafec.Service.UserService;
 import com.maid.cafe.c.maidcafec.Utils.CafeUtils;
@@ -9,6 +11,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -19,6 +24,15 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService {
     @Autowired
     UserDAO userDAO;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    JWTUtils jwtUtils;
 
     @Override
     public ResponseEntity<String> signUp(Map<String, String> requestMap) {
@@ -63,5 +77,23 @@ public class UserServiceImpl implements UserService {
         user.setRole("user");
 
         return user;
+    }
+
+    @Override
+    public ResponseEntity<String> login(Map<String, String> requestMap) {
+        log.info("Inside login");
+        try{
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestMap.get("email"), requestMap.get("password")));
+            if (authentication.isAuthenticated()) {
+                if (customUserDetailsService.getUserDetails().getStatus().equalsIgnoreCase("true")){
+                    return new ResponseEntity<String>("{\"token\":\"" + jwtUtils.generateToken(customUserDetailsService.getUserDetails().getEmail(), customUserDetailsService.getUserDetails().getRole() + "\"}"), HttpStatus.OK);
+                }
+                return new ResponseEntity<String>("{\"message\":\"" + "wait for Admin approval." + "\"}", HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception exception){
+            log.error("The issue is: " + exception);
+        }
+
+        return new ResponseEntity<String>("{\"message\":\"" + "Bad credentials." + "\"}", HttpStatus.BAD_REQUEST);
     }
 }

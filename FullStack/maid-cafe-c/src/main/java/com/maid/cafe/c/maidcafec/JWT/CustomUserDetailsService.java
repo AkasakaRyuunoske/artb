@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
     }
 
-//    public com.maid.cafe.c.maidcafec.POJO.User getUserDetails(){
-//
-//    }
+    public com.maid.cafe.c.maidcafec.POJO.User getUserDetails(){
+        return userDetails;
+    }
 }
