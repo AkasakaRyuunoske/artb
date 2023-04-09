@@ -5,10 +5,13 @@ import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.io.Serial;
 import java.io.Serializable;
 
+// About NamedQueries: https://attacomsian.com/blog/spring-data-jpa-named-queries
 @NamedQuery(name = "User.findByEmailId", query = "select u from User u where u.email = :email")
 
+@NamedQuery(name = "User.getAllUser", query = "select new com.maid.cafe.c.maidcafec.Wrapper.UserWrapper(u.id, u.name, u.contactNumber, u.email, u.status) from User u where u.role = 'user'")
 
 @Data
 @Entity
@@ -16,6 +19,7 @@ import java.io.Serializable;
 @DynamicUpdate        // https://thorben-janssen.com/dynamic-inserts-and-updates-with-spring-data-jpa/#Standard_behavior
 @Table(name = "user") // https://stackoverflow.com/questions/3404630/hibernate-dynamic-update-dynamic-insert-performance-effects
 public class User implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
