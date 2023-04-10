@@ -1,5 +1,6 @@
 package com.maid.cafe.c.maidcafec.ServiceImplementation;
 
+import com.google.common.base.Strings;
 import com.maid.cafe.c.maidcafec.Constants.CafeConstant;
 import com.maid.cafe.c.maidcafec.DAO.UserDAO;
 import com.maid.cafe.c.maidcafec.JWT.CustomUserDetailsService;
@@ -8,8 +9,10 @@ import com.maid.cafe.c.maidcafec.JWT.JWTUtils;
 import com.maid.cafe.c.maidcafec.POJO.User;
 import com.maid.cafe.c.maidcafec.Service.UserService;
 import com.maid.cafe.c.maidcafec.Utils.CafeUtils;
+import com.maid.cafe.c.maidcafec.Utils.EmailUtils;
 import com.maid.cafe.c.maidcafec.Wrapper.UserWrapper;
 import lombok.extern.log4j.Log4j2;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    EmailUtils emailUtils;
 
     @Autowired
     JWTUtils jwtUtils;
@@ -123,6 +129,7 @@ public class UserServiceImpl implements UserService {
                 Optional<User> optional = userDAO.findById(Integer.parseInt(requestMap.get("id")));
                 if (optional.isPresent()){
                     userDAO.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
+                    sendMailToAllAdmin(requestMap.get("status"), optional.get().getEmail(), userDAO.getAllAdmin());
                     return CafeUtils.getResponseEntity(CafeConstant.INVALID_DATA, HttpStatus.OK); // Todo yeh yeh this one too must be changed
                 } else {
                     CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.NOT_FOUND); // Todo change
@@ -134,5 +141,68 @@ public class UserServiceImpl implements UserService {
             exception.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // todo change this one too
+    }
+
+    // Not sure about this one. So if the token is valid returns true, if not user gets 403 and does not reach this one
+    @Override
+    public ResponseEntity<String> checkToken() {
+       return CafeUtils.getResponseEntity("true", HttpStatus.OK); // Todo change change change change change change change change change change change change change change change change
+    }
+
+    @Override
+    public ResponseEntity<String> changePassword(Map<String, String> requestMap) {
+        try{
+            User  user = userDAO.findByEmail(jwtFilter.getCurrentUser());
+
+            if (user != null){
+                 if (user.getPassword().equals(requestMap.get("oldPassword"))){
+                     user.setPassword(requestMap.get("newPassword"));
+                     userDAO.save(user);
+
+                     return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.OK); // Password is ok // todo obvs
+                 }
+                return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.BAD_REQUEST); // Incorrect old password // todo obvs
+            }
+            return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // todo obvs
+
+        } catch (Exception exception){
+            exception.printStackTrace();
+        }
+
+        return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // Todo this one too must be changed later
+    }
+
+    @Override
+    public ResponseEntity<String> forgotPassword(Map<String, String> requestMap) {
+        try{
+            User user = userDAO.findByEmail(requestMap.get("email"));
+
+            if (!Objects.isNull(user) && !Strings.isNullOrEmpty(user.getEmail())){
+                emailUtils.forgotMail(user.getEmail(), "Credentials by cringe", user.getPassword());
+            }
+
+            // Even if email does not exists user must not know about it
+            return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.OK); // Check yo mail for credentials// Todo this one too must be changed later
+
+        } catch (Exception exception){
+            exception.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // Todo this one too must be changed later
+    }
+
+    private void sendMailToAllAdmin(String status, String user, List<String> allAdmin) {
+        allAdmin.remove(jwtFilter.getCurrentUser());
+
+        if (status != null && status.equalsIgnoreCase("true")){
+            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(),
+                    "Account approved",
+                    "USER:- " + user + "\n is approved by \nADMIN:-" + jwtFilter.getCurrentUser(),
+                    allAdmin); // Todo setup mail
+        } else {
+            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(),
+                    "Account approved",
+                    "USER:- " + user + "\n is disabled by \nADMIN:-" + jwtFilter.getCurrentUser(),
+                    allAdmin);
+        }
     }
 }
