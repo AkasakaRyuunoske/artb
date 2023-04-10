@@ -5,7 +5,6 @@ import com.maid.cafe.c.maidcafec.REST.UserRest;
 import com.maid.cafe.c.maidcafec.Service.UserService;
 import com.maid.cafe.c.maidcafec.Utils.CafeUtils;
 import com.maid.cafe.c.maidcafec.Wrapper.UserWrapper;
-import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,5 +62,36 @@ public class UserRestImpl implements UserRest {
         } catch (Exception exception){
             return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // Todo this one too must be changed later
         }
+    }
+
+    @Override
+    public ResponseEntity<String> checkToken() {
+        try{
+            return userService.checkToken();
+        } catch (Exception exception){
+            exception.printStackTrace(); //Todo change sometime
+        }
+
+        return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // Todo this one too must be changed later
+    }
+
+    @Override
+    public ResponseEntity<String> changePassword(Map<String, String> requestMap) {
+        try{
+            return userService.changePassword(requestMap);
+        }  catch (Exception exception){
+            exception.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // Todo this one too must be changed later
+    }
+
+    @Override
+    public ResponseEntity<String> forgotPassword(Map<String, String> requestMap) {
+        try{
+            return userService.forgotPassword(requestMap);
+        }  catch (Exception exception){
+            exception.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // Todo this one too must be changed later
     }
 }
