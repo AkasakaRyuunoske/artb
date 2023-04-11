@@ -46,13 +46,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<String> signUp(Map<String, String> requestMap) {
-        log.info("Sign up: {}" , requestMap);
+        log.info("Sign up: {}", requestMap);
 
         try {
 
-            if (validateSignUpMap(requestMap)){
+            if (validateSignUpMap(requestMap)) {
                 User user = userDAO.findByEmailId(requestMap.get("email"));
-                if (Objects.isNull(user)){
+                if (Objects.isNull(user)) {
                     userDAO.save(getUserFromMap(requestMap));
                     return CafeUtils.getResponseEntity("Successfully registered.", HttpStatus.OK);
                 } else {
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
             } else {
                 return CafeUtils.getResponseEntity(CafeConstant.INVALID_DATA, HttpStatus.BAD_REQUEST);
             }
-        } catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 
@@ -69,14 +69,14 @@ public class UserServiceImpl implements UserService {
     }
 
     //todo make more precise what is missing in the request
-    private boolean validateSignUpMap(Map<String, String> requestMap){
+    private boolean validateSignUpMap(Map<String, String> requestMap) {
         return requestMap.containsKey("name") &&
-               requestMap.containsKey("contactNumber") &&
-               requestMap.containsKey("email") &&
-               requestMap.containsKey("password");
+                requestMap.containsKey("contactNumber") &&
+                requestMap.containsKey("email") &&
+                requestMap.containsKey("password");
     }
 
-    private User getUserFromMap(Map <String, String> requestMap){
+    private User getUserFromMap(Map<String, String> requestMap) {
         User user = new User();
 
         user.setName(requestMap.get("name"));
@@ -92,15 +92,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<String> login(Map<String, String> requestMap) {
         log.info("Inside login");
-        try{
+        try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestMap.get("email"), requestMap.get("password")));
             if (authentication.isAuthenticated()) {
-                if (customUserDetailsService.getUserDetails().getStatus().equalsIgnoreCase("true")){
+                if (customUserDetailsService.getUserDetails().getStatus().equalsIgnoreCase("true")) {
                     return new ResponseEntity<String>("{\"token\":\"" + jwtUtils.generateToken(customUserDetailsService.getUserDetails().getEmail(), customUserDetailsService.getUserDetails().getRole()), HttpStatus.OK);
                 }
                 return new ResponseEntity<String>("{\"message\":\"" + "wait for Admin approval." + "\"}", HttpStatus.BAD_REQUEST);
             }
-        }catch (Exception exception){
+        } catch (Exception exception) {
             log.error("The issue is: " + exception);
         }
 
@@ -109,13 +109,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<List<UserWrapper>> getAllUser() {
-        try{
-            if (jwtFilter.isAdmin()){
+        try {
+            if (jwtFilter.isAdmin()) {
                 return new ResponseEntity<>(userDAO.getAllUser(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
             }
-        } catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
         // Todo same here
@@ -124,10 +124,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<String> update(Map<String, String> requestMap) {
-        try{
-            if (jwtFilter.isAdmin()){
+        try {
+            if (jwtFilter.isAdmin()) {
                 Optional<User> optional = userDAO.findById(Integer.parseInt(requestMap.get("id")));
-                if (optional.isPresent()){
+                if (optional.isPresent()) {
                     userDAO.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
                     sendMailToAllAdmin(requestMap.get("status"), optional.get().getEmail(), userDAO.getAllAdmin());
                     return CafeUtils.getResponseEntity(CafeConstant.INVALID_DATA, HttpStatus.OK); // Todo yeh yeh this one too must be changed
@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
             } else {
                 return CafeUtils.getResponseEntity(CafeConstant.FUSAGA_RE_TA_MICCHI_WO_HIRAKU_MONO_NI_NARU, HttpStatus.UNAUTHORIZED); // todo change this one
             }
-        } catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // todo change this one too
@@ -146,54 +146,56 @@ public class UserServiceImpl implements UserService {
     // Not sure about this one. So if the token is valid returns true, if not user gets 403 and does not reach this one
     @Override
     public ResponseEntity<String> checkToken() {
-       return CafeUtils.getResponseEntity("true", HttpStatus.OK); // Todo change change change change change change change change change change change change change change change change
+        return CafeUtils.getResponseEntity("true", HttpStatus.OK); // Todo change change change change change change change change change change change change change change change change
     }
 
     @Override
     public ResponseEntity<String> changePassword(Map<String, String> requestMap) {
-        try{
-            User  user = userDAO.findByEmail(jwtFilter.getCurrentUser());
+        try {
+            User user = userDAO.findByEmail(jwtFilter.getCurrentUser());
 
-            if (user != null){
-                 if (user.getPassword().equals(requestMap.get("oldPassword"))){
-                     user.setPassword(requestMap.get("newPassword"));
-                     userDAO.save(user);
+            if (user != null) {
+                if (user.getPassword().equals(requestMap.get("oldPassword"))) {
+                    user.setPassword(requestMap.get("newPassword"));
+                    userDAO.save(user);
 
-                     return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.OK); // Password is ok // todo obvs
-                 }
+                    return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.OK); // Password is ok // todo obvs
+                }
                 return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.BAD_REQUEST); // Incorrect old password // todo obvs
             }
             return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // todo obvs
 
-        } catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 
-        return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // Todo this one too must be changed later
+        return CafeUtils.getResponseEntity(CafeConstant.UNEXPECTED_ERROR_OCCURRED, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    //Todo set up mail
     @Override
     public ResponseEntity<String> forgotPassword(Map<String, String> requestMap) {
-        try{
+        try {
             User user = userDAO.findByEmail(requestMap.get("email"));
 
-            if (!Objects.isNull(user) && !Strings.isNullOrEmpty(user.getEmail())){
+            if (!Objects.isNull(user) && !Strings.isNullOrEmpty(user.getEmail())) {
                 emailUtils.forgotMail(user.getEmail(), "Credentials by cringe", user.getPassword());
             }
 
             // Even if email does not exists user must not know about it
             return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.OK); // Check yo mail for credentials// Todo this one too must be changed later
 
-        } catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstant.YUME, HttpStatus.INTERNAL_SERVER_ERROR); // Todo this one too must be changed later
     }
 
+    //Todo set up mail
     private void sendMailToAllAdmin(String status, String user, List<String> allAdmin) {
         allAdmin.remove(jwtFilter.getCurrentUser());
 
-        if (status != null && status.equalsIgnoreCase("true")){
+        if (status != null && status.equalsIgnoreCase("true")) {
             emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(),
                     "Account approved",
                     "USER:- " + user + "\n is approved by \nADMIN:-" + jwtFilter.getCurrentUser(),
