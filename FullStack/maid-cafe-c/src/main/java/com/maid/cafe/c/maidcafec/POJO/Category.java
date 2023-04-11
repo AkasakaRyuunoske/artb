@@ -7,7 +7,8 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
 
-@NamedQuery(name = "Category.getAllCategory", query = "Select c from Category c where c.id in (select p.category from Product p where p.status ='true')")
+@NamedQuery(name = "Category.getAllCategory",
+        query = "Select category from Category category where category.id in (select product.category from Product product where product.status ='true')")
 
 @Data
 @Entity
@@ -16,7 +17,7 @@ import java.io.Serializable;
 @Table(name = "category")
 public class Category implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 228229922L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

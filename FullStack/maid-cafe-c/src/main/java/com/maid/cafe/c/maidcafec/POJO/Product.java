@@ -7,11 +7,10 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
 
-//todo change aliases
 @NamedQuery(name = "Product.getAllProduct",
-        query = "select new com.maid.cafe.c.maidcafec.Wrapper.ProductWrapper(p.id, p.name, p.description, p.price, p.status, p.category.id, p.category.name) from Product p")
-@NamedQuery(name = "Product.updateProductStatus", query = "update Product p set p.status = :status where p.id = :id")
-@NamedQuery(name = "Product.getProductByCategory", query = "select new com.maid.cafe.c.maidcafec.Wrapper.ProductWrapper(p.id, p.name) from Product p where p.category.id = :id and p.status='true'")
+        query = "select new com.maid.cafe.c.maidcafec.Wrapper.ProductWrapper(product.id, product.name, product.description, product.price, product.status, product.category.id, product.category.name) from Product product")
+@NamedQuery(name = "Product.updateProductStatus", query = "update Product product set product.status = :status where product.id = :id")
+@NamedQuery(name = "Product.getProductByCategory", query = "select new com.maid.cafe.c.maidcafec.Wrapper.ProductWrapper(product.id, product.name) from Product product where product.category.id = :id and product.status='true'")
 
 @Data
 @Entity

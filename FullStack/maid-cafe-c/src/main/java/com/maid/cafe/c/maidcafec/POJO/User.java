@@ -9,10 +9,10 @@ import java.io.Serial;
 import java.io.Serializable;
 
 // About NamedQueries: https://attacomsian.com/blog/spring-data-jpa-named-queries
-@NamedQuery(name = "User.findByEmailId", query = "select u from User u where u.email = :email")
-@NamedQuery(name = "User.getAllUser", query = "select new com.maid.cafe.c.maidcafec.Wrapper.UserWrapper(u.id, u.name, u.contactNumber, u.email, u.status) from User u where u.role = 'user'")
-@NamedQuery(name = "User.getAllAdmin", query = "select u.email from User u where u.role = 'admin'")
-@NamedQuery(name = "User.updateStatus", query = "update User u set u.status = :status where u.id = :id")
+@NamedQuery(name = "User.findByEmailId", query = "select user from User user where user.email = :email")
+@NamedQuery(name = "User.getAllUser", query = "select new com.maid.cafe.c.maidcafec.Wrapper.UserWrapper(user.id, user.name, user.contactNumber, user.email, user.status) from User user where user.role = 'user'")
+@NamedQuery(name = "User.getAllAdmin", query = "select user.email from User user where user.role = 'admin'")
+@NamedQuery(name = "User.updateStatus", query = "update User user set user.status = :status where user.id = :id")
 
 @Data
 @Entity
