@@ -8,4 +8,6 @@ public class CafeConstant {
 
     public static final String SOMETHING_WENT_WRONG = "Something went wrong...";
     public static final String UNEXPECTED_ERROR_OCCURRED = "Unexpected error occurred on server side.";
+
+    public static final String BILL_STORE_LOCATION = "D:/artb/FullStack/maid-cafe-c";
 }

@@ -9,9 +9,12 @@ import java.io.Serializable;
 
 @NamedQuery(name = "Product.getAllProduct",
         query = "select new com.maid.cafe.c.maidcafec.Wrapper.ProductWrapper(product.id, product.name, product.description, product.price, product.status, product.category.id, product.category.name) from Product product")
-@NamedQuery(name = "Product.updateProductStatus", query = "update Product product set product.status = :status where product.id = :id")
-@NamedQuery(name = "Product.getProductByCategory", query = "select new com.maid.cafe.c.maidcafec.Wrapper.ProductWrapper(product.id, product.name) from Product product where product.category.id = :id and product.status='true'")
-
+@NamedQuery(name = "Product.updateProductStatus",
+        query = "update Product product set product.status = :status where product.id = :id")
+@NamedQuery(name = "Product.getProductByCategory",
+        query = "select new com.maid.cafe.c.maidcafec.Wrapper.ProductWrapper(product.id, product.name) from Product product where product.category.id = :id and product.status='true'")
+@NamedQuery(name = "Product.getProductById",
+        query = "select new com.maid.cafe.c.maidcafec.Wrapper.ProductWrapper(product.id, product.name, product.description, product.price) from Product product where product.id = :id")
 @Data
 @Entity
 @DynamicUpdate

@@ -144,6 +144,16 @@ public class ProductServiceImpl implements ProductService {
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR); //todo must be changed
     }
 
+    @Override
+    public ResponseEntity<ProductWrapper> getProductById(Integer id) {
+        try {
+            return new ResponseEntity<>(productDAO.getProductById(id), HttpStatus.OK);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return new ResponseEntity<>(new ProductWrapper(), HttpStatus.INTERNAL_SERVER_ERROR); //todo must be changed
+    }
+
     private Product getProductFromMap(Map<String, String> requestMap, boolean isAdd) {
         Category category = new Category();
         Product product = new Product();
