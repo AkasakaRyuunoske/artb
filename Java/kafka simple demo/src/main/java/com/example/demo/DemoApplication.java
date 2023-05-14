@@ -20,23 +20,23 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 //		log.info("NEE ANATA WA ITSUMO YUME WO MITE MASU KA?");
 	}
-	@Bean
-	public NewTopic topic() {
-		return TopicBuilder.name("utsup")
-				.partitions(10)
-				.replicas(1)
-				.build();
-	}
-
-	@KafkaListener(id = "Akasaka", topics = "utsup")
-	public void listen(String in) {
-		log.info("Listening: " + in);
-	}
-
-	@Bean
-	public ApplicationRunner runner(KafkaTemplate<String, String> template) {
-		return args -> {
-			template.send("utsup", "NEE ANATA WA ITSUMO YUME WO MITE MASU KA?");
-		};
-	}
+//	@Bean
+//	public NewTopic topic() {
+//		return TopicBuilder.name("utsup")
+//				.partitions(10)
+//				.replicas(1)
+//				.build();
+//	}
+//
+//	@KafkaListener(id = "Akasaka", topics = "utsup")
+//	public void listen(String in) {
+//		log.info("Listening: " + in);
+//	}
+//
+//	@Bean
+//	public ApplicationRunner runner(KafkaTemplate<String, String> template) {
+//		return args -> {
+//			template.send("utsup", "NEE ANATA WA ITSUMO YUME WO MITE MASU KA?");
+//		};
+//	}
 }
