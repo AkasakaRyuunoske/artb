@@ -4,7 +4,10 @@ package com.example.demo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 @Table(value = "anaata")
@@ -12,10 +15,15 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Anaata {
-    @PrimaryKey
-    String anaata;
+    @PrimaryKeyColumn(name = "yume", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
+    String yume;
 
+    @Column("message")
     String message;
+
+    @Column("name")
     String name;
+
+    @Column("probability")
     int probability;
 }
