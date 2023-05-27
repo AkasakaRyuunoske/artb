@@ -19,6 +19,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.util.Arrays;
@@ -41,14 +42,82 @@ public class KafkaController {
     @Autowired
     AnaataRepository anaataRepository;
 
-    @GetMapping("/testmessage")
-    public ResponseEntity<String> test(HttpServletRequest httpServletRequest,
-                                       HttpServletResponse httpServletResponse) throws NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+
+    @GetMapping("/asymmetric_key_request_test")
+    ResponseEntity<String> RSAController() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+        // Step 1: Come up with a message we want to encrypt
+        byte[] message = "NEE ANATA WA ITSUMO YUME WO MITE MASU KA?".getBytes();
+// Step 2: Create a KeyGenerator object
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+// Step 3: Initialize the KeyGenerator with a certain keysize
+        keyPairGenerator.initialize(512);
+// Step 4: Generate the key pairs
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+// Step 5: Extract the keys
+        PrivateKey privateKey = keyPair.getPrivate();
+        PublicKey publicKey = keyPair.getPublic();
+// Step 6: Create a Cipher object
+
+        System.out.println("Private key is : " + privateKey);
+        System.out.println("public key is : " + publicKey);
+
+        Cipher cipher = Cipher.getInstance("RSA/ECB/NoPadding");
+// Step 7: Initialize the Cipher object
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+// Step 8: Give the Cipher our message
+        cipher.update(message);
+// Step 9: Encrypt the message
+        byte[] ciphertext = cipher.doFinal();
+// Step 10: Print the ciphertext
+        System.out.println("message: " + new String(message, "UTF8"));
+        System.out.println("ciphertext: " + new String(ciphertext, "UTF8"));
+// Step 11: Change the Cipher object's mode
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+// Step 12: Give the Cipher objectour ciphertext
+        cipher.update(ciphertext);
+// Step 13: Decrypt the ciphertext
+        byte[] decrypted = cipher.doFinal();
+        System.out.println("decrypted: " + new String(decrypted, "UTF8"));
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+//        String message = "Climb Niitaka Mound";
+        Map<String, String> payload = new HashMap<>();
+
+        payload.put("encryptedMessage", Base64.getEncoder().encodeToString(ciphertext));
+//        payload.put("IV", Arrays.toString(ivBytes));
+        payload.put("PK", publicKey.toString());
+
+        HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(payload, headers);
+
+        String uri = "http://localhost:8080/asymmetric_key_request_test";
+
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.postForObject(uri, httpEntity, String.class);
+
+        log.info("Result is: " + result);
+
+
+        return new ResponseEntity<>("{\"The message\":\"is dying\"}", HttpStatus.OK);
+    }
+
+    @GetMapping("/testmessage/{anaata}")
+    public ResponseEntity<String> CamelliaController(@PathVariable String anaata) throws NoSuchPaddingException,
+                                                NoSuchAlgorithmException,
+                                                NoSuchProviderException,
+                                                InvalidAlgorithmParameterException,
+                                                InvalidKeyException,
+                                                IllegalBlockSizeException,
+                                                BadPaddingException {
         // -------------- Symmetric Key Func --------------------------- //
 
         Security.addProvider(new BouncyCastleProvider());
 
-        String message = "Climb Niitaka mound";
+        Anaata yume = anaataRepository.findByYume(anaata);
+
+        String message = yume.toString();
         String key = "ThisIsASecretKey";
 
         // Generate a random IV
@@ -96,17 +165,83 @@ public class KafkaController {
 
         log.info("Result is: " + result);
 
-        log.info("Request by main is:(Header): " + httpServletRequest.getAttribute("Yume"));
-        log.info("Request by main is:(Context Path): " + httpServletRequest.getContextPath());
-
-        log.info("Response by main is(Header): " + httpServletResponse.getHeader("Yume"));
-        log.info("Response by main is(Status): " + httpServletResponse.getStatus());
-
         return new ResponseEntity<>("{\"The message\":\"isn't dying\"}", HttpStatus.OK);
     }
 
     @GetMapping("/anaata")
     public void getAnaaata(){
         log.info("anaataRepository: " + anaataRepository.findByYume("Chloe"));
+    }
+
+    // HANDSHAKE PROCESS ---> INITIATOR
+
+    @GetMapping("/start_handshake_with_Chloe")
+    public void startHandshakeWithChloe() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+
+        log.info("Handshake attempted with: Chloe");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> sendNee_httpEntity = new HttpEntity<>("Nee anaata", headers);
+
+        String sendNee_uri = "http://localhost:8080/start_handshake";
+
+        RestTemplate sendNee_restTemplate = new RestTemplate();
+        String sendNee_result = sendNee_restTemplate.postForObject(sendNee_uri, sendNee_httpEntity, String.class);
+
+        log.info("Result is: " + sendNee_result);
+
+        if (sendNee_result != null) {
+            if (sendNee_result.equals("Nee Nee")) {
+
+                // Step 1: Come up with a message we want to encrypt
+                byte[] message = "NEE ANATA WA ITSUMO YUME WO MITE MASU KA?".getBytes();
+// Step 2: Create a KeyGenerator object
+                KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+// Step 3: Initialize the KeyGenerator with a certain keysize
+                keyPairGenerator.initialize(512);
+// Step 4: Generate the key pairs
+                KeyPair keyPair = keyPairGenerator.generateKeyPair();
+// Step 5: Extract the keys
+                PrivateKey privateKey = keyPair.getPrivate();
+                PublicKey publicKey = keyPair.getPublic();
+// Step 6: Create a Cipher object
+
+                System.out.println("Private key is : " + privateKey);
+                System.out.println("public key is : " + publicKey);
+
+//                Cipher cipher = Cipher.getInstance("RSA/ECB/NoPadding");
+//// Step 7: Initialize the Cipher object
+//                cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+//// Step 8: Give the Cipher our message
+//                cipher.update(message);
+//// Step 9: Encrypt the message
+//                byte[] ciphertext = cipher.doFinal();
+//// Step 10: Print the ciphertext
+//                System.out.println("message: " + new String(message, "UTF8"));
+//                System.out.println("ciphertext: " + new String(ciphertext, "UTF8"));
+//// Step 11: Change the Cipher object's mode
+//                cipher.init(Cipher.DECRYPT_MODE, privateKey);
+//// Step 12: Give the Cipher objectour ciphertext
+//                cipher.update(ciphertext);
+//// Step 13: Decrypt the ciphertext
+//                byte[] decrypted = cipher.doFinal();
+//                System.out.println("decrypted: " + new String(decrypted, "UTF8"));
+                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+                byte[] publicKeyBytes = publicKey.getEncoded();
+
+                HttpEntity<byte[]> sendEncryptedMessage_httpEntity = new HttpEntity<>(publicKeyBytes, headers);
+
+                String sendEncryptedMessage_uri = "http://localhost:8080/start_handshake/getEncryptedMessage";
+
+                RestTemplate restTemplate = new RestTemplate();
+                Map<String, String> sendEncryptedMessage_result = restTemplate.postForObject(sendEncryptedMessage_uri, sendEncryptedMessage_httpEntity, Map.class);
+
+                log.info("sendEncryptedMessage_result Key: " + sendEncryptedMessage_result.get("Key"));
+                log.info("sendEncryptedMessage_result IV: " + sendEncryptedMessage_result.get("IV"));
+            }
+        }
     }
 }
