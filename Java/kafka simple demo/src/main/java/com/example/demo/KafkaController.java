@@ -176,7 +176,7 @@ public class KafkaController {
     // HANDSHAKE PROCESS ---> INITIATOR
 
     @GetMapping("/start_handshake_with_Chloe")
-    public void startHandshakeWithChloe() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+    public void startHandshakeWithChloe() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, NoSuchProviderException, InvalidAlgorithmParameterException {
 
         log.info("Handshake attempted with: Chloe");
 
@@ -195,8 +195,6 @@ public class KafkaController {
         if (sendNee_result != null) {
             if (sendNee_result.equals("Nee Nee")) {
 
-                // Step 1: Come up with a message we want to encrypt
-                byte[] message = "NEE ANATA WA ITSUMO YUME WO MITE MASU KA?".getBytes();
 // Step 2: Create a KeyGenerator object
                 KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 // Step 3: Initialize the KeyGenerator with a certain keysize
@@ -223,7 +221,7 @@ public class KafkaController {
 //                System.out.println("ciphertext: " + new String(ciphertext, "UTF8"));
 //// Step 11: Change the Cipher object's mode
 //                cipher.init(Cipher.DECRYPT_MODE, privateKey);
-//// Step 12: Give the Cipher objectour ciphertext
+//// Step 12: Give the Cipher object our ciphertext
 //                cipher.update(ciphertext);
 //// Step 13: Decrypt the ciphertext
 //                byte[] decrypted = cipher.doFinal();
@@ -239,8 +237,72 @@ public class KafkaController {
                 RestTemplate restTemplate = new RestTemplate();
                 Map<String, String> sendEncryptedMessage_result = restTemplate.postForObject(sendEncryptedMessage_uri, sendEncryptedMessage_httpEntity, Map.class);
 
-                log.info("sendEncryptedMessage_result Key: " + sendEncryptedMessage_result.get("Key"));
-                log.info("sendEncryptedMessage_result IV: " + sendEncryptedMessage_result.get("IV"));
+                log.info("sendEncryptedMessage_result Key: "            + sendEncryptedMessage_result.get("Key"));
+                log.info("sendEncryptedMessage_result IV: "             + Arrays.toString(Base64.getDecoder().decode(sendEncryptedMessage_result.get("IV"))));
+                log.info("sendEncryptedMessage_result CipheredKey: "    + sendEncryptedMessage_result.get("CipheredKey"));
+                log.info("sendEncryptedMessage_result CipheredIV: "     + sendEncryptedMessage_result.get("CipheredIV"));
+                log.info("sendEncryptedMessage_result CipheredIV: "     + Arrays.toString(Base64.getDecoder().decode(sendEncryptedMessage_result.get("CipheredIV").getBytes())));
+                Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-1AndMGF1Padding");
+// Step 11: Change the Cipher object's mode
+                cipher.init(Cipher.DECRYPT_MODE, privateKey);
+// Step 12: Give the Cipher object our ciphertext
+                cipher.update(Base64.getDecoder().decode(sendEncryptedMessage_result.get("CipheredKey")));
+// Step 13: Decrypt the ciphertext
+                byte[] decrypted = cipher.doFinal();
+                log.info("decrypted: " + new String(decrypted, StandardCharsets.UTF_8));
+
+                //#todo see why the hell byte[] isn't decrypted properly
+
+                cipher.update(Base64.getDecoder().decode(sendEncryptedMessage_result.get("CipheredIV")));
+                byte[] decryptedIV = cipher.doFinal();
+                log.info("decryptedIV: " + new String(decryptedIV, StandardCharsets.UTF_8));
+
+
+                // Continuing with SYMMETRICAL KEY Camellia algorithm
+
+                ///
+
+                ///
+
+                /// WAREWARETE MIKUDSASARE
+
+                ///
+                Security.addProvider(new BouncyCastleProvider());
+
+                // Decrypted => key string from Chloe
+                String key = new String(decrypted, StandardCharsets.UTF_8);
+
+                // Generate a random IV
+//        byte[] ivBytes = payload.get("IV").getBytes();
+                byte[] ivBytes = Base64.getDecoder().decode(sendEncryptedMessage_result.get("IV"));
+                IvParameterSpec ivParameterSpec = new IvParameterSpec(ivBytes);
+
+                log.info("ivParameterSpec: " + Arrays.toString(ivParameterSpec.getIV()));
+                SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "Camellia");
+
+                // Create a new cipher instance for decryption and initialize it with the key and IV
+                Cipher ecnryptionCipher = Cipher.getInstance("Camellia/CBC/PKCS7Padding", "BC");
+                ecnryptionCipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
+
+                // Decode the Base64 encoded message and IV
+                byte[] encodedBytes = Base64.getDecoder().decode("\"Bakit hindi mo subukan bago mo sabihin na hindi mo kaya.\" \n(Not so random Girl)");
+
+                // Decrypt the message
+                byte[] encryptedBytes = ecnryptionCipher.doFinal(encodedBytes);
+
+                log.info("encryptedBytes: " + Arrays.toString(encryptedBytes));
+
+                HttpHeaders sendCamelliaEncodedMessage_headers = new HttpHeaders();
+                sendCamelliaEncodedMessage_headers.setContentType(MediaType.APPLICATION_JSON);
+
+                HttpEntity<String> sendCamelliaEncodedMessage_httpEntity = new HttpEntity<>(Base64.getEncoder().encodeToString(encryptedBytes), sendCamelliaEncodedMessage_headers);
+
+                String sendCamelliaEncodedMessage_uri = "http://localhost:8080/start_handshake/last_step";
+
+                RestTemplate sendCamelliaEncodedMessage_restTemplate = new RestTemplate();
+                String sendCamelliaEncodedMessage_result = sendCamelliaEncodedMessage_restTemplate.postForObject(sendCamelliaEncodedMessage_uri, sendCamelliaEncodedMessage_httpEntity, String.class);
+
+                log.info("sendCamelliaEncodedMessage_result: " + sendCamelliaEncodedMessage_result);
             }
         }
     }
